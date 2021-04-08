@@ -1,7 +1,7 @@
 # Hyperledger Fabric Installation
 
 ## Setup
-These steps describes a HLF 2.2.x installation on a DigitalOcean Droplet.
+These steps describe a HLF 2.2.x installation on a DigitalOcean Droplet.
 
 ## Droplet 
 Digital Ocean Droplet, 1 CPU, 2 GB, 50 GB SSD  
