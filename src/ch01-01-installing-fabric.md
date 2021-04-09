@@ -1,32 +1,57 @@
 # Hyperledger Fabric Installation
+Below you can find the detailed step by steps instructions for installating a Hyperledger fabric system according to the official Hyperledger fabric documentation.
+
+Watch the video of this chapter to follow the steps below.
 
 ## Setup
-These steps describe a HLF 2.2.x installation on a DigitalOcean Droplet.
+These steps describe a HLF 2.2.x installation on an Ubuntu 20.04 operating system.
 
-## Droplet 
-Digital Ocean Droplet, 1 CPU, 2 GB, 50 GB SSD  
-OS, Ubuntu 20.04 (LTS) x64
+First, I would like to give you an overview of the installation steps. We can divide the installation process into 5 steps. Figure 1 shows these steps as a whole.
 
-## Access via ssh
-ssh root@ssh root@xx
+<figure class="image">
+  <img src="img/install1.png" alt="Overview Installation">
+  <figcaption>Figure 1</figcaption>
+</figure>
 
-## Perparations
-The following steps are required to prepare the Droplet.
+After finishing these steps you will have a ready Hyperledger Fabric Installation and a running test-network.
+
+## Droplet or virtuel private server 
+In this course we will use a so called Digital Ocean Droplet with the following configuration: 1 CPU, 2 GB, 50 GB SSD. This server setup should be sufficient to perform all of the examples in this course.
+
+If your are more familare with a VirtualBox setup then you are good to go as well. The starting point for the installation is in any case a basic installation of Ubuntu 20.04.
+
+## System update
+The following steps are required to prepare your ubuntu system for the fabric installation process. Let's discuss the steps in detail. 
+
+First, we do a system update. Make sure you are working as root user.
 
 ```bash
 # update the OS
 apt update && apt upgrade
+```
 
+Second, we install some helper tools. The tools are tree, jq, gcc and make. 
+
+The bash **tree** command is used to display the contents of any desired directory of your computer system in the form of a tree structure. This is helpful to inspect the content of a folder. 
+
+According to the **jq** homepage, jq is like sed for JSON data - you can use it to slice and filter and map and transform structured data with the same ease that sed, awk, grep and friends let you play with text. In our example we can use jq to parse the json response from our blockchain to get to get a nicely formatted output in the terminal.
+
+Finally the command line tools **gcc and make** are needed to install the Fabric Node.js SDK to interact with the Fabric system e.g. if you want to query a peer or invoke some transaction. 
+
+```bash
 # install some useful helpers
 apt install tree jq gcc make
+```
+The third and final step is to setup the right timezone according your needs. Because the authors of this course are located in Austria we set the timeuzone to Europe/Vienna. Feel free to set you timezone. If your unsure what is the correct timezone check the **timedatectl list-timezones** command for a list of possible timezones.
 
-# it's always good the use the right time
-# so setup the correct timezone
+```bash
+# setup the correct timezone to fit your needs
 timedatectl set-timezone Europe/Vienna
 
 # check the time
-date
+timedatectl
 ```
+Now that we have completed the system prep, we can move on to the next important item. The Docker installation.
 
 ## Install Docker
 The following steps are required to install docker on the Droplet. Reference: https://docs.docker.com/engine/install/ubuntu/
