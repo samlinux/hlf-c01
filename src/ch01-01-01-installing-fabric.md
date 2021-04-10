@@ -123,7 +123,7 @@ Use the commands below and step by step copy and paste these into your terminal 
 First, we download and unzip the go binary for our system. 
 ```bash 
 # download and extract go
-# latest version 08.04.21 1.14.9
+# latest 1.14.x version 08.04.21 1.14.9
 rm -rf /usr/local/go && tar -C /usr/local -xzf go1.14.9.linux-amd64.tar.gz
 ```
 
@@ -134,6 +134,9 @@ echo 'export PATH="$PATH:/usr/local/go/bin:"' >> $HOME/.profile
 ```
 
 Third, to apply the changes immediately, just run the shell command **source $HOME/.profile**.
+
+>**Note**: A profile file is a start-up file of an UNIX user, like the autoexec. bat file of DOS. When a UNIX user tries to login to his account, the operating system executes this file to set up the user account before returning the prompt to the user.
+
 ```bash
 # reload the profile
 source $HOME/.profile
@@ -156,7 +159,7 @@ Use the commands below and step by step copy and paste these into your terminal 
 
 First, download the install script.
 ```bash
-# add PPA from NodeSource
+# add Personal Package Archives (PPA) from NodeSource
 curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
 ```
 
@@ -186,147 +189,79 @@ node -v
 
 If you see a output like **v12.22.1** you have successfully installed Node.js.
 
-At this point we have made all preparations to finally install HLF.
+At this point we have made all preparations in place to finish the HLF setup.
 
-## Install and test Fabric Samples, Binaries and Docker Images
+## Install Fabric Samples, Binaries and Docker Images
+
+Determine a location on your machine where you want to place the base folder for the fabric-samples repository. In this course we call that folder fabric. The command that follows will perform the following steps:
+
+* Clone the hyperledger/fabric-samples repository
+* Checkout the appropriate version tag
+* Install the Hyperledger Fabric platform-specific binaries and config files for the version specified into the /bin and /config directories of fabric-samples
+* Download the Hyperledger Fabric docker images for the version specified
+
+First, create your base folder and switch onto that folder.
 
 ```bash
-mkdir fabric
-cd fabric
+mkdir fabric && cd fabric
+```
 
-# install the latest production release from the 1.4.x branch
-# we use 2.2 in our examples
-curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.2.1 1.4.9
+Second, execute the following **curl** command to install HLF.
 
-# check downloaded images
-docker images
+We want a specific release for our course, pass a version identifier for Fabric and Fabric-CA docker images. The command below demonstrates how to download the latest production releases - Fabric v2.2.2 and Fabric CA v1.4.9
 
+>Note: curl -sSL https://bit.ly/2ysbOFE | bash -s -- <fabric_version> <fabric-ca_version>
+
+This command downloads and executes a bash script that will download and extract all of the platform-specific binaries you will need to set up your network and place them into the cloned repo you created above.
+
+```bash
+# this course uses HLF version 2.2.2
+curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.2.2 1.4.9
+```
+After the sucessfully installation you should have the folowing binaries under the **bin** sub-directory of the current working directory.
+
+```bash
+root@fabric:~/fabric: tree fabric-samples/bin/
+fabric-samples/bin/
+├── configtxgen
+├── configtxlator
+├── cryptogen
+├── discover
+├── fabric-ca-client
+├── fabric-ca-server
+├── idemixgen
+├── orderer
+└── peer
+
+0 directories, 9 files
+```
+
+In order to be able to access these binaries quickly and easily, we add the path to the **bin** sub-folder to the PATH environment variable and reload the **.profile** file.
+
+```bash
+echo 'export PATH="$PATH:/root/fabric/fabric-samples/bin"' >> $HOME/.profile
+source $HOME/.profile
+```
+
+Finally we can check our installation with the following command.
+```bash
 # check the bin cmd
 peer version
 ```
 
-## Try the installation
-The fabric-samples provisions a sample HLF test-network consisting of two organizations, each maintaining one peer nodes. It also will deploy a single RAFT ordering service by default. 
-
-To test your installationen we can start interacting with the network.
+If you see a output like below then you have successfully installed HLF.
 
 ```bash
-# switch to the base folder
-cd fabric-samples/test-network
-
-# print some help
-./network.sh --help
-
-# bring up the network
-./network.sh up createChannel -c channel1
-
-# install default CC - asset-transfer (basic) chaincode
-./network.sh deployCC -c channel1
-
-# show if some containers are running
-docker ps
-docker-compose -f docker/docker-compose-test-net.yaml ps
+root@fabric:~/fabric: peer version
+peer:
+ Version: 2.2.2
+ Commit SHA: bebb75fd1
+ Go version: go1.14.12
+ OS/Arch: linux/amd64
+ Chaincode:
+  Base Docker Label: org.hyperledger.fabric
+  Docker Namespace: hyperledger
 ```
 
-## Interacting with the network
 
-tmux control
-```bash
-# start a new tmux session
-tmux new -s fabric
-
-# attach to existing session
-tmux add -t fabric
-
-# show all logs
-docker-compose -f docker/docker-compose-test-net.yaml logs -f -t
-
-# open a new panel
-CTRL + b (release pressed keys) + \""
-
-# jump between panels
-CTRL + b + q 1
-
-# detach from session
-CTRL + b + d
-
-```
-
-## Environment variables for peer Org1
-
-```bash
-# create an env file
-. scripts/envVars.sh
-setGlobals 1
-
-# check env vars
-printenv | grep CORE
-```
-
-## Initialize the leder (sample data)
-Run the following command to initialize the ledger with assets:
-```bash
-
-# for explanation
-peer chaincode invoke 
-  -o localhost:7050 
-  --ordererTLSHostnameOverride orderer.example.com 
-  --tls 
-  --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem 
-  -C $CHANNEL_NAME 
-  -n basic 
-  --peerAddresses localhost:7051 
-  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt 
-  --peerAddresses localhost:9051 
-  --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt 
-  -c '{"function":"InitLedger","Args":[]}'
-
-
-# for copy and paste
-peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n basic --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"InitLedger","Args":[]}'
-```
-
-## Query the leder
-
-```bash
-# Read the last state of all assets
-peer chaincode query -C $CHANNEL_NAME -n basic -c '{"Args":["GetAllAssets"]}' | jq .
-
-# Read an asset 
-peer chaincode query -C $CHANNEL_NAME -n basic -c '{"Args":["ReadAsset","asset1"]}' | jq .
-```
-
-## Create an asset
-```bash
-
-peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n basic --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"CreateAsset","Args":["asset7","green","10","Roland","500"]}'
-```
-
-## Update an asset
-```bash
-peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n basic --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"UpdateAsset","Args":["asset7","green","10","Roland","600"]}'
-```
-
-## Transfer an asset
-```bash
-peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n basic --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"TransferAsset","Args":["asset7","Joana"]}'
-```
-
-## Delete an asset
-```bash
-peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n basic --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"DeleteAsset","Args":["asset1"]}'
-```
-
-## Switch to peer Org2
-We can switch to work with peer Org2 peer0.org2.example.com with changeing the following evironment variables. 
-```bash 
-
-# create an env file
-setGlobals 2
-```
-
-## Bring down the network
-```bash
-./network.sh down
-```
 [Index](./index.md)
