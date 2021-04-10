@@ -1,25 +1,36 @@
 # Hyperledger Fabric (HLF) Installation
-Below you can find the detailed step by steps instructions for installating a HLF system according to the official HLF documentation.
+
+## Chapter Overview
+
+In this chapter you can find the detailed step by steps instructions for installating a HLF system according to the official HLF documentation. We walk through all the nessesary steps to install HLF on your virtual machine.
 
 Watch the video in this chapter to complete the following steps.
+
+## Learning Objectives
+
+By the end of this chapter, you will be able to:
+
+- Understand what are the building blocks of an HLF installation.
+- Install HLF on an Ubuntu 20.04 operating system.
+
+## Prerequisites
+Since this course is based on Ubuntu 20.04 operating system, please prepare a virtual machine with a running Ubuntu 20.04 operating system. You have various options for doing this. 
+
+You can either use one of the public Infrastructure as a service (IaaS) providers such as Digital Ocean, AWS, Google Cloud or Azur or you can use VirtualBox locally on your computer and use an Ubuntu 20.04 image. The basic installation of Ubuntu 20.04 is out of the scope of this course. To learn more about the manual installation of Ubuntu please refer the official documentation on https://ubuntu.com/server/docs/installation. 
+
+In this course we will use a so called Digital Ocean **Droplet** with the following configuration: 1 CPU, 2 GB, 50 GB SSD. This virtual machine should be sufficient to perform all of the examples in this course and can spin up in less then one minute.
 
 ## Setup
 These steps describe a HLF 2.2.x installation on an Ubuntu 20.04 operating system.
 
-First, I would like to give you an overview of the installation steps. We can divide the installation process into 5 steps. Figure 1 shows these steps as a whole.
+First, I would like to give you an overview of the installation steps. We can divide the installation process into five steps. Figure 1 shows these steps as a whole.
 
 <figure class="image">
   <img src="img/install1.png" alt="Overview Installation">
   <figcaption>Figure 1</figcaption>
 </figure>
 
-After finishing these steps you will have a ready HLF Installation and a running test-network.
-
-## Preparations
-### Droplet or virtuel private server 
-In this course we will use a so called Digital Ocean Droplet with the following configuration: 1 CPU, 2 GB, 50 GB SSD. This server setup should be sufficient to perform all of the examples in this course.
-
-If your are more familare with a VirtualBox setup then you are good to go as well. The starting point for the installation is in any case a basic installation of Ubuntu 20.04.
+After finishing these steps you will have a ready HLF installation and a running test-network.
 
 ### System update
 The following steps are required to prepare your ubuntu system for the HLF installation process. Let's discuss the steps in detail. 
@@ -163,7 +174,7 @@ First, download the install script.
 curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
 ```
 
-Second, execute the script. The script will prepare the apt source on your ubuntu maschine to install Node.js via the ubuntu default install tool apt.
+Second, execute the script. The script will prepare the apt source on your ubuntu machine to install Node.js via the ubuntu default install tool apt.
 
 >**Note**: The period (dot) is short hand for the bash built in source. It will read and execute commands from a file in the current environment and return the exit status of the last command executed. It does not need to be executable.
 
@@ -262,6 +273,8 @@ peer:
   Base Docker Label: org.hyperledger.fabric
   Docker Namespace: hyperledger
 ```
+
+Congratulations at this point you have successfully installed HLF on your linux box.
 
 
 [Index](./index.md)
