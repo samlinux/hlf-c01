@@ -11,17 +11,17 @@ Watch the video in this chapter to complete the following steps.
 By the end of this chapter, you will be able to:
 
 - Understand what are the building blocks of an HLF installation.
-- Install HLF on an Ubuntu 20.04 operating system.
+- Install HLF on an Ubuntu 20.04 operating system and run the test-network.
 
 ## Prerequisites
 Since this course is based on Ubuntu 20.04 operating system, please prepare a virtual machine with a running Ubuntu 20.04 operating system. You have various options for doing this. 
 
 You can either use one of the public Infrastructure as a service (IaaS) providers such as Digital Ocean, AWS, Google Cloud or Azur or you can use VirtualBox locally on your computer and use an Ubuntu 20.04 image. The basic installation of Ubuntu 20.04 is out of the scope of this course. To learn more about the manual installation of Ubuntu please refer the official documentation on https://ubuntu.com/server/docs/installation. 
 
-In this course we will use a so called Digital Ocean **Droplet** with the following configuration: 1 CPU, 2 GB, 50 GB SSD. This virtual machine should be sufficient to perform all of the examples in this course and can spin up in less then one minute.
+In this course we will use as a so-called Digital Ocean **Droplet** with the following configuration as a reference: 1 CPU, 2 GB, 50 GB SSD. This virtual machine configuration should be sufficient to perform all of the examples in this course and can spin up in less then one minute.
 
 ## Setup
-These steps describe a HLF 2.2.x installation on an Ubuntu 20.04 operating system.
+The following steps describe a HLF 2.2.x installation on an Ubuntu 20.04 operating system.
 
 First, I would like to give you an overview of the installation steps. We can divide the installation process into five steps. Figure 1 shows these steps as a whole.
 
@@ -33,16 +33,16 @@ First, I would like to give you an overview of the installation steps. We can di
 After finishing these steps you will have a ready HLF installation and a running test-network.
 
 ### System update
-The following steps are required to prepare your ubuntu system for the HLF installation process. Let's discuss the steps in detail. 
+The following steps are required to prepare your Ubuntu 20.04 system for the HLF installation process. Let's discuss the steps in detail. 
 
-First, we do a system update. Open a terminal and make sure you are working as root user.
+First, we do a system update. Open a terminal window and make sure you are working as root user. Copy and paste the command below into the terminal to update the system. A system restart may be required.
 
 ```bash
 # update the OS
 apt update && apt upgrade
 ```
 
-Second, we install some helper tools. The tools are tree, jq, gcc and make. 
+Second, we install some helper tools. The tools are **tree, jq, gcc and make**. 
 
 The bash **tree** command is used to display the contents of any desired directory of your computer system in the form of a tree structure. This is helpful to inspect the content of a folder. 
 
@@ -50,11 +50,12 @@ According to the **jq** homepage, jq is like sed for JSON data - you can use it 
 
 Finally the command line tools **gcc and make** are needed to install the Fabric Node.js SDK to interact with the Fabric system e.g. if you want to query a peer or invoke some transaction. 
 
+Copy and paste the following command into terminal to continue.
 ```bash
 # install some useful helpers
 apt install tree jq gcc make
 ```
-The third and final step is to setup the right timezone according your needs. Because the authors of this course are located in Austria we set the timezone to Europe/Vienna. Feel free to set the timezone according your needs. If your unsure what is the correct timezone check the **timedatectl list-timezones** command for a list of possible timezones and pick the right one.
+The third and final step is to setup the right timezone according your needs. Because the authors of this course are located in Austria we set the timezone to Europe/Vienna. Feel free to set the timezone according your needs. If your are unsure what is your correct timezone check the **timedatectl list-timezones** command for a list of possible timezones and pick the right one.
 
 ```bash
 # setup the correct timezone to fit your needs
@@ -63,6 +64,7 @@ timedatectl set-timezone Europe/Vienna
 # check the time
 timedatectl
 ```
+
 Now that we have completed the system prep, we can move on to the next important item. The Docker installation.
 
 ### Install Docker
@@ -97,7 +99,7 @@ apt install docker-ce docker-ce-cli containerd.io
 # check the docker version
 docker --version
 ```
-If you see a output similar like **Docker version 20.10.5, build xxx** you have successfully installed Docker.
+If you see a output similar like **Docker version 20.10.5, build 55c4c88** you have successfully installed Docker.
 
 Congratulations at this point you have successfully installed Docker on your linux box.
 
@@ -117,7 +119,7 @@ chmod +x /usr/local/bin/docker-compose
 # check the docker-compose version
 docker-compose --version
 ```
-If you see a output like **docker-compose version 1.29.0, build xxxx** you have successfully installed Docker Compose.
+If you see a output like **docker-compose version 1.29.0, build 5db8d86f** you have successfully installed Docker Compose.
 
 Congratulations at this point you have also successfully installed Docker Compose on your linux box. We are now ready to use Docker and Docker Compose for our HLF journey.
 
@@ -129,7 +131,7 @@ HLF uses the Go Programming Language for many of its components.
 
 Although this course is based on Node.js for chaincode as well as for client development, we should install **Go** on our training machine.
 
-Use the commands below and step by step copy and paste these into your terminal to install Go. For this we follow the official documentation. Referene https://golang.org/doc/install
+Use the commands below and step by step copy and paste these into your terminal to install Go. For this process we follow the official documentation. Referene https://golang.org/doc/install
 
 First, we download and unzip the go binary for our system. 
 ```bash 
@@ -166,7 +168,7 @@ In this course we uses Node.js for chaincode and client development. According t
 
 >Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine.
 
-Use the commands below and step by step copy and paste these into your terminal to install Node.js.
+Use the commands below and step by step copy and paste these commands into your terminal to install Node.js.
 
 First, download the install script.
 ```bash
@@ -174,7 +176,7 @@ First, download the install script.
 curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
 ```
 
-Second, execute the script. The script will prepare the apt source on your ubuntu machine to install Node.js via the ubuntu default install tool apt.
+Second, execute the script. The script prepares the apt source on your Ubuntu machine to install Node.js using standard Ubuntu installer apt.
 
 >**Note**: The period (dot) is short hand for the bash built in source. It will read and execute commands from a file in the current environment and return the exit status of the last command executed. It does not need to be executable.
 
@@ -204,14 +206,14 @@ At this point we have made all preparations in place to finish the HLF setup.
 
 ## Install Fabric Samples, Binaries and Docker Images
 
-Determine a location on your machine where you want to place the base folder for the fabric-samples repository. In this course we call that folder fabric. The command that follows will perform the following steps:
+Determine a location on your machine where you want to place the base folder for the fabric-samples repository. In this course we call that folder **fabric**. The command that follows performs the required steps:
 
 * Clone the hyperledger/fabric-samples repository
 * Checkout the appropriate version tag
 * Install the Hyperledger Fabric platform-specific binaries and config files for the version specified into the /bin and /config directories of fabric-samples
 * Download the Hyperledger Fabric docker images for the version specified
 
-First, create your base folder and switch onto that folder.
+First, create your base folder and switch to that folder.
 
 ```bash
 mkdir fabric && cd fabric
@@ -223,13 +225,15 @@ We want a specific release for our course, pass a version identifier for Fabric 
 
 >Note: curl -sSL https://bit.ly/2ysbOFE | bash -s -- <fabric_version> <fabric-ca_version>
 
-This command downloads and executes a bash script that will download and extract all of the platform-specific binaries you will need to set up your network and place them into the cloned repo you created above.
+The command below downloads and executes a bash script that download and extract all of the platform-specific binaries you will need to set up your network and place them into the cloned repo you created above.
+
+This process can take a while, depending on your internet speed.
 
 ```bash
 # this course uses HLF version 2.2.2
 curl -sSL https://bit.ly/2ysbOFE | bash -s -- 2.2.2 1.4.9
 ```
-After the sucessfully installation you should have the folowing binaries under the **bin** sub-directory of the current working directory.
+After the sucessfully installation you should have the folowing binaries under the **bin** sub-directory of the current working directory and as well the following Docker images.
 
 ```bash
 root@fabric:~/fabric: tree fabric-samples/bin/
@@ -246,6 +250,34 @@ fabric-samples/bin/
 
 0 directories, 9 files
 ```
+
+Check your Docker images with the command: **docker images**
+
+```bash
+root@fabric:~: docker images
+REPOSITORY                   TAG       IMAGE ID       CREATED        SIZE
+couchdb                      3.1.1     6763bc849b36   13 days ago    190MB
+busybox                      latest    a9d583973f65   4 weeks ago    1.23MB
+hyperledger/fabric-tools     2.2       212bfff67240   2 months ago   436MB
+hyperledger/fabric-tools     2.2.2     212bfff67240   2 months ago   436MB
+hyperledger/fabric-tools     latest    212bfff67240   2 months ago   436MB
+hyperledger/fabric-peer      2.2       0db1edb6ddd8   2 months ago   55MB
+hyperledger/fabric-peer      2.2.2     0db1edb6ddd8   2 months ago   55MB
+hyperledger/fabric-peer      latest    0db1edb6ddd8   2 months ago   55MB
+hyperledger/fabric-orderer   2.2       89cac0d3ab9b   2 months ago   38.5MB
+hyperledger/fabric-orderer   2.2.2     89cac0d3ab9b   2 months ago   38.5MB
+hyperledger/fabric-orderer   latest    89cac0d3ab9b   2 months ago   38.5MB
+hyperledger/fabric-ccenv     2.2       989d60213726   2 months ago   502MB
+hyperledger/fabric-ccenv     2.2.2     989d60213726   2 months ago   502MB
+hyperledger/fabric-ccenv     latest    989d60213726   2 months ago   502MB
+hyperledger/fabric-baseos    2.2       0483f4bff906   2 months ago   6.85MB
+hyperledger/fabric-baseos    2.2.2     0483f4bff906   2 months ago   6.85MB
+hyperledger/fabric-baseos    latest    0483f4bff906   2 months ago   6.85MB
+hyperledger/fabric-ca        1.4       dbbc768aec79   6 months ago   158MB
+hyperledger/fabric-ca        1.4.9     dbbc768aec79   6 months ago   158MB
+hyperledger/fabric-ca        latest    dbbc768aec79   6 months ago   158MB
+```
+
 
 In order to be able to access these binaries quickly and easily, we add the path to the **bin** sub-folder to the PATH environment variable and reload the **.profile** file.
 
@@ -275,6 +307,5 @@ peer:
 ```
 
 Congratulations at this point you have successfully installed HLF on your linux box.
-
 
 [Index](./index.md)
