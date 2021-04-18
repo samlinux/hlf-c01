@@ -162,7 +162,21 @@ Congratulations, now you have finished all the steps to start the test-network. 
 
 ## Interact with the network
 
-In this first test, we are going to use CLI commands in our terminal. One important point is that the HLF network has to know who we are. That question is answered with special environment variables which has to be exported to terminal. 
+To interact with a running HLF network we have three posibilities. Figure 3 summarizes these:
+<figure class="image">
+  <img src="img/interactWithTheNetwork.png" alt="Opportunities to interact with the network.">
+  <figcaption>Figure 3</figcaption>
+</figure>
+
+Depending on your use case, you can opt for a variant. Option one is basically used for administration.
+
+Option two - the container version - can be used if you have not installed the binaries or do not want to use them.
+
+Finally, option three - the SDK - which is usually used for production and building a REST API to interact with the network using a front-end application, usually written in Angular or some other Javascript framework.
+
+In this first test we use the binary version with the corresponding CLI commands in our terminal. 
+
+One important point is that the HLF network has to know who we are. That question is answered with special environment variables which has to be exported to terminal. 
 
 ### Environment variables for Org1
 
@@ -212,7 +226,11 @@ peer chaincode invoke
 
 
 # for copy and paste
+## binary version
 peer chaincode invoke -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n basic --peerAddresses localhost:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses localhost:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"InitLedger","Args":[]}'
+
+## cli version 
+peer chaincode invoke -o orderer.example.com:7050 --ordererTLSHostnameOverride orderer.example.com --tls --cafile ${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C $CHANNEL_NAME -n basic --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles ${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -c '{"function":"InitLedger","Args":[]}'
 ```
 
 ### Query the leder
