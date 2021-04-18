@@ -164,7 +164,7 @@ Congratulations, now you have finished all the steps to start the test-network. 
 
 To interact with a running HLF network we have three posibilities. Figure 3 summarizes these:
 <figure class="image">
-  <img src="img/interactWithTheNetwork.png" alt="Opportunities to interact with the network.">
+  <img src="img/InteractWithTheNetwork.png" alt="Opportunities to interact with the network.">
   <figcaption>Figure 3</figcaption>
 </figure>
 
