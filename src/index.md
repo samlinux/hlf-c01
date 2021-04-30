@@ -7,6 +7,8 @@
 - [Section 01-02-01 - Installing sdg-dev-network](./ch01-02-01-installing-dev-network.md)
 
 ## Chapter 2 - Chaincode development
+- [Section 02-00-00 - Getting started with Chaincode development](./ch02-00-00-getting-started.md)
+- [Section 02-01-00 - CRUD operations](./ch02-01-00-crud.md)
 - Define smart contract class/construct
 - Define transaction functions
 - Validate and sanitize inputs and arguments

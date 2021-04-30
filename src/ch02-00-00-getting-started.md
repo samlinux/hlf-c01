@@ -28,3 +28,4 @@ To interact with the ledger there are two APIs available. First the so-called
 
 Either can be used. The fabric-shim API is the older one and provides a lower level chaincode interface. The fabric-contract-api is the current implementation and provides a high-level API for writing smart contracts. It also provides the implementation of the fabric-shim API to ensure compatibility with previous versions of Hyperledger Fabric. The fabric-contract-api is also the version that we will focus on in this course.
 
+[Index](./index.md)
