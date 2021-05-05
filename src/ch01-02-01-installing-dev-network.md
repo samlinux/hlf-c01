@@ -86,6 +86,10 @@ tmux att -t dev
 >**Delete/kill session dev**<br> 
 tmux kill-ses -t mysession
 
+>**Enable scrolling**<br> 
+CTRL + b :set -g mouse on
+
+
 ## Panel 1
 
 ```bash
